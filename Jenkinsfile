@@ -3,24 +3,22 @@
  * This is currently handled through Automated Builds using standard Docker Hub feature
 */
 pipeline {
-    agent { label 'linux' }
-
-    options {
-        timeout(time: 2, unit: 'MINUTES')
-        buildDiscarder(logRotator(daysToKeepStr: '10'))
-        timestamps()
-    }
-
-    triggers {
-        pollSCM('H/24 * * * *') // once a day in case some hooks are missed
-    }
+    agent any
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
-                deleteDir()
-                checkout scm
-                sh 'make build'
+                echo 'Building..'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
             }
         }
     }
