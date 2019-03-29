@@ -1,36 +1,26 @@
-/* NOTE: this Pipeline mainly aims at catching mistakes (wrongly formed Dockerfile, etc.)
- * This Pipeline is *not* used for actual image publishing.
- * This is currently handled through Automated Builds using standard Docker Hub feature
-*/
-pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+node{
+    stage('get clone'){
+        //check CODE
+        echo 'Checkout==========》》》'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://source.enncloud.cn/qinzhao/spring-boot-demo.git']]])
     }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'deploy'
-            }
-        }
+
+    //定义mvn环境
+    def mvnHome = tool 'maven3.5.3'
+    env.PATH = "${mvnHome}/bin:${env.PATH}"
+
+    stage('mvn test'){
+        //mvn 测试
+        sh "mvn test"
+    }
+
+    stage('mvn build'){
+        //mvn构建
+        sh "mvn clean install -Dmaven.test.skip=true"
+    }
+
+    stage('deploy'){
+        //执行部署脚本
+        echo "deploy ......" 
     }
 }
-
-// vim: ft=groovy
