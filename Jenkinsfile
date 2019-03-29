@@ -2,7 +2,7 @@ node{
     stage('get clone'){
         //check CODE
         echo 'Checkout==========》》》'
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://source.enncloud.cn/qinzhao/spring-boot-demo.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/leeaee/delta.git']]])
     }
 
     //定义mvn环境
